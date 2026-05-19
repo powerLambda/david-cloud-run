@@ -1,4 +1,4 @@
-package main
+package caldav2ics
 
 import (
 	"sort"

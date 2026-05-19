@@ -18,14 +18,15 @@ The CalDAV server is fixed to `https://caldav.feishu.cn`.
 
 Optional:
 
-- `CALDAV_PRINCIPAL_URL` (override principal URL)
-- `CALDAV_CALENDAR_HOME` (override calendar home URL)
-- `CALDAV_CALENDAR_URL` (override default calendar URL)
+- `CALDAV_PRINCIPAL_URL` (override principal path or URL)
+- `CALDAV_CALENDAR_HOME` (override calendar home path or URL)
+- `CALDAV_CALENDAR_URL` (override default calendar path or URL)
 - `CALDAV_TIMEOUT` (default `15s`)
 - `ENDPOINT_PATH` (default `/caldav2ics/feishu`)
 - `TIMEZONE` (default `Asia/Shanghai`)
 - `CALDAV_DEBUG` (`1`/`true`/`yes` to enable debug logging)
 - `PORT` (default `8080`)
+- `CALDAV_E2E` (set to `1` to enable the CalDAV e2e test)
 
 ## Local Run
 
@@ -40,6 +41,13 @@ Test:
 
 ```bash
 curl -v http://localhost:8080/caldav2ics/feishu
+```
+
+Tests:
+
+```bash
+go test ./...
+CALDAV_E2E=1 CALDAV_USERNAME=... CALDAV_PASSWORD=... go test ./internal/caldav2ics -run TestCalDAV2ICSE2E
 ```
 
 ## Cloud Run Deploy
