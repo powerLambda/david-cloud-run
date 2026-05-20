@@ -3,8 +3,8 @@ package caldav2ics
 import (
 	"net/http"
 
+	modules "github.com/powerLambda/david-cloud-run/internal"
 	"github.com/powerLambda/david-cloud-run/internal/config"
-	"github.com/powerLambda/david-cloud-run/internal/modules"
 )
 
 type Module struct {
