@@ -32,7 +32,7 @@ func TestCalDAV2ICSE2E(t *testing.T) {
 	}
 
 	h := NewHandler(cfg, client)
-	req := httptest.NewRequest(http.MethodGet, cfg.EndpointPath, nil)
+	req := httptest.NewRequest(http.MethodGet, "/caldav2ics/feishu", nil)
 	rec := httptest.NewRecorder()
 
 	h.ServeHTTP(rec, req)

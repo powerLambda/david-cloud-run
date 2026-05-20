@@ -1,0 +1,14 @@
+### Web2RSS - Build RSS from configured sources
+# Use with VS Code REST Client or curl. Ensure the server is running and `internal/web2rss/sources.yaml` exists.
+
+### Build RSS for a configured source URL
+GET http://localhost:8080/web2rss?url=https://www.lancedb.com/blog
+Accept: application/rss+xml
+
+# Expected: 200 and RSS XML payload
+
+### Build RSS for an arbitrary page (may return 502 if not configured)
+GET http://localhost:8080/web2rss?url=https://flink.apache.org/posts/
+Accept: application/rss+xml
+
+# Expected: 502 if the source is not configured in sources.yaml

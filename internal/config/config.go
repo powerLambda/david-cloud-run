@@ -22,7 +22,6 @@ type Config struct {
 	CaldavPrincipalURL string
 	CaldavCalendarHome string
 	CaldavCalendarURL  string
-	EndpointPath       string
 	Timezone           string
 	Timeout            time.Duration
 	ListenAddr         string
@@ -37,15 +36,7 @@ func LoadConfig() (Config, error) {
 		CaldavPrincipalURL: strings.TrimSpace(os.Getenv("CALDAV_PRINCIPAL_URL")),
 		CaldavCalendarHome: strings.TrimSpace(os.Getenv("CALDAV_CALENDAR_HOME")),
 		CaldavCalendarURL:  strings.TrimSpace(os.Getenv("CALDAV_CALENDAR_URL")),
-		EndpointPath:       strings.TrimSpace(os.Getenv("ENDPOINT_PATH")),
 		Timezone:           strings.TrimSpace(os.Getenv("TIMEZONE")),
-	}
-
-	if cfg.EndpointPath == "" {
-		cfg.EndpointPath = defaultEndpointPath
-	}
-	if !strings.HasPrefix(cfg.EndpointPath, "/") {
-		cfg.EndpointPath = "/" + cfg.EndpointPath
 	}
 	if cfg.Timezone == "" {
 		cfg.Timezone = defaultTimezone

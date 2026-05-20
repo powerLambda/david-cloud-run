@@ -59,6 +59,28 @@ gcloud run deploy caldav2ics \
   --allow-unauthenticated \
   --set-secrets CALDAV_USERNAME=projects/PROJECT_ID/secrets/CALDAV_USERNAME:latest,CALDAV_PASSWORD=projects/PROJECT_ID/secrets/CALDAV_PASSWORD:latest
 ```
+ 
+## Web2RSS
+
+`web2rss` 模块根据 per-URL 的 `sources.yaml` 配置抓取页面并生成 RSS。配置使用 Feed43 风格的 token pattern：
+
+- Feed43 风格的 token pattern（示例：`<h2>{%}</h2>{*}<a href="{%}">{*}</a>{*}<p>{%}</p>`），模板使用 `{%1}`, `{%2}` 等引用捕获组。
+
+示例 `internal/web2rss/sources.sample.yaml` 已包含注释说明；你也可以参考 `internal/web2rss/sources.yaml` 中的 LanceDB 示例。
+
+测试与验证：
+
+- 带开关的对照 e2e（使用 rsseverything 作为参考源，比较前 10 条 item 的 title/link/description）：
+```bash
+WEB2RSS_E2E=1 go test ./internal/web2rss -run TestRSSEverythingCompare -v
+```
+
+- 可重复运行的验证脚本：
+```bash
+./scripts/repeat_e2e.sh 5
+```
+
+注意：e2e 依赖外部站点（rsseverything 与 lancedb），我在测试中增加了 HTML 标签剥离、实体解码、空白归一化和特定尾注过滤来提高对齐的稳健性，但长期稳定性依赖于目标站点结构的变化。
 
 Webcal subscription URL:
 

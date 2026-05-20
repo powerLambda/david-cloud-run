@@ -1,0 +1,19 @@
+sources:
+  - url: "https://www.lancedb.com/blog"
+    pattern: |
+      <div role="listitem" class="w-dyn-item"><a href="{%}"{*}<div class="search-post-heading">{%}</div><div class="search-post_description">{%}</div>
+    title_template: "{%2}"
+    link_template: "{%1}"
+    content_template: "{%3}"
+    feed_title: "LanceDB Blog"
+    feed_link: "https://www.lancedb.com/blog"
+    feed_description: "LanceDB Blog Feed"
+  - url: "https://flink.apache.org/posts/" 
+    pattern: |
+      <article class="markdown book-post">{*}<h3>{*}<a href="{%}">{%}</a>{*}</h3>{%}</article>
+    title_template: "{%2}"
+    link_template: "{%1}"
+    content_template: "{%3}"
+    feed_title: "Apache Flink Blog"
+    feed_link: "https://flink.apache.org/posts/"
+    feed_description: "Apache Flink Blog Feed"

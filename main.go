@@ -3,12 +3,13 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
 	"time"
 	_ "time/tzdata"
 
 	"github.com/powerLambda/david-cloud-run/internal/caldav2ics"
 	"github.com/powerLambda/david-cloud-run/internal/config"
-	"github.com/powerLambda/david-cloud-run/internal/modules"
+	"github.com/powerLambda/david-cloud-run/internal/web2rss"
 )
 
 func main() {
@@ -22,8 +23,22 @@ func main() {
 		log.Fatalf("caldav client error: %v", err)
 	}
 
+	// load web2rss sources from default file path (fail-fast)
+	sourcesPath := "./internal/web2rss/sources.yaml"
+	sf, err := os.Open(sourcesPath)
+	if err != nil {
+		log.Fatalf("failed to open web2rss sources (%s): %v", sourcesPath, err)
+	}
+	defer sf.Close()
+	sources, err := web2rss.LoadSources(sf)
+	if err != nil {
+		log.Fatalf("failed to load web2rss sources: %v", err)
+	}
+	webSvc := web2rss.NewService(cfg, sources)
+
 	mux := http.NewServeMux()
-	modules.Register(mux, caldav2ics.NewModule(cfg, client))
+	mux.Handle("/caldav2ics/feishu", caldav2ics.NewHandler(cfg, client))
+	mux.Handle("/web2rss", web2rss.NewHandler(cfg, webSvc))
 	mux.HandleFunc("/healthz", handleHealth)
 
 	server := &http.Server{

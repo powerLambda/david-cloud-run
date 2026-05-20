@@ -1,0 +1,8 @@
+### Caldav2ICS - Fetch calendar as ICS
+# Use this with the VS Code REST Client or curl.
+
+### Get calendar ICS
+GET http://localhost:8080/caldav2ics/feishu
+Accept: text/calendar
+
+# Expected: 200 and a valid iCalendar payload (text/calendar)
