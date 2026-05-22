@@ -17,3 +17,11 @@ sources:
     feed_title: "Apache Flink Blog"
     feed_link: "https://flink.apache.org/posts/"
     feed_description: "Apache Flink Blog Feed"
+  - url: "https://www.anthropic.com/engineering"
+    pattern: |
+      <h3 class="headline-4">{%}</h3>{*}<a class="ArticleList-module-scss-module___tpu-a__cardLink" href="{%}">
+    title_template: "{%1}"
+    link_template: "{%2}"
+    feed_title: "Anthropic Engineering Blog"
+    feed_link: "https://www.anthropic.com/engineering"
+    feed_description: "Engineering at Anthropic: Inside the team building reliable AI systems"
