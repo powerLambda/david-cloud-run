@@ -7,10 +7,11 @@ import (
 )
 
 const (
-	bitableBaseID  = "AXiQbIeOIabJxcsDS6ScdMg5nub" // Feishu Bitable app token
-	bitableTableID = "tbl0UyerHzv2pDbY"            // Feishu Bitable table ID
-	bitableViewID  = "vewgMuvngQ"
-	requestTimeout = 15 * time.Second
+	bitableBaseID    = "AXiQbIeOIabJxcsDS6ScdMg5nub" // Feishu Bitable app token
+	bitableTableID   = "tbl0UyerHzv2pDbY"            // Feishu Bitable table ID
+	bitableViewID    = "vewgMuvngQ"
+	fieldCurrentPrice = "当前市价"
+	requestTimeout   = 15 * time.Second
 )
 
 var portfolioFieldNames = []string{"证券名称", "证券代码"}

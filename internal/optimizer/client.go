@@ -40,6 +40,36 @@ func fetchToken(ctx context.Context, httpCli *http.Client, appID, appSecret stri
 	return tr.TenantAccessToken, nil
 }
 
+func updateRecord(ctx context.Context, httpCli *http.Client, token, baseID, tableID, recordID string, fields map[string]interface{}) error {
+	bodyBytes, err := json.Marshal(map[string]interface{}{"fields": fields})
+	if err != nil {
+		return err
+	}
+	url := fmt.Sprintf("%s/open-apis/bitable/v1/apps/%s/tables/%s/records/%s",
+		feishuBaseURL, baseID, tableID, recordID)
+	req, err := http.NewRequestWithContext(ctx, http.MethodPut, url, bytes.NewReader(bodyBytes))
+	if err != nil {
+		return err
+	}
+	req.Header.Set("Content-Type", "application/json; charset=utf-8")
+	req.Header.Set("Authorization", "Bearer "+token)
+
+	resp, err := httpCli.Do(req)
+	if err != nil {
+		return fmt.Errorf("updateRecord: %w", err)
+	}
+	defer resp.Body.Close()
+
+	var ur updateResp
+	if err := json.NewDecoder(resp.Body).Decode(&ur); err != nil {
+		return err
+	}
+	if ur.Code != 0 {
+		return fmt.Errorf("feishu update error: code=%d msg=%s", ur.Code, ur.Msg)
+	}
+	return nil
+}
+
 func searchRecords(ctx context.Context, httpCli *http.Client, token, baseID, tableID string, body searchReqBody) ([]record, error) {
 	bodyBytes, err := json.Marshal(body)
 	if err != nil {

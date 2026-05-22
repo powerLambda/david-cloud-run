@@ -1,5 +1,7 @@
 package optimizer
 
+import "encoding/json"
+
 type tokenReq struct {
 	AppID     string `json:"app_id"`
 	AppSecret string `json:"app_secret"`
@@ -36,8 +38,8 @@ type searchData struct {
 }
 
 type record struct {
-	RecordID string                  `json:"record_id"`
-	Fields   map[string][]FieldValue `json:"fields"`
+	RecordID string                     `json:"record_id"`
+	Fields   map[string]json.RawMessage `json:"fields"`
 }
 
 // PortfolioItem holds extracted text values keyed by field name,
@@ -46,7 +48,13 @@ type PortfolioItem map[string]string
 
 // PortfolioItemWithPrice combines bitable data with the current market price.
 type PortfolioItemWithPrice struct {
-	Name  string  `json:"name"`
-	Code  string  `json:"code"`
-	Price float64 `json:"price"`
+	RecordID string  `json:"record_id"`
+	Name     string  `json:"name"`
+	Code     string  `json:"code"`
+	Price    float64 `json:"price"`
+}
+
+type updateResp struct {
+	Code int    `json:"code"`
+	Msg  string `json:"msg"`
 }

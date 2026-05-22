@@ -54,6 +54,11 @@ func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if err := UpdatePortfolioPrice(ctx, h.cfg, priced); err != nil {
+		log.Printf("optimizer error updating bitable: %v", err)
+		// non-fatal: return priced data so the caller can verify what was fetched
+	}
+
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
 	_ = json.NewEncoder(w).Encode(priced)
