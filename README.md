@@ -13,6 +13,8 @@ Required:
 
 - `CALDAV_USERNAME`
 - `CALDAV_PASSWORD`
+- `FEISHU_APP_ID` (for optimizer module)
+- `FEISHU_APP_SECRET` (for optimizer module)
 
 The CalDAV server is fixed to `https://caldav.feishu.cn`.
 
@@ -57,7 +59,7 @@ gcloud run deploy caldav2ics \
   --source . \
   --region asia-east1 \
   --allow-unauthenticated \
-  --set-secrets CALDAV_USERNAME=projects/PROJECT_ID/secrets/CALDAV_USERNAME:latest,CALDAV_PASSWORD=projects/PROJECT_ID/secrets/CALDAV_PASSWORD:latest
+  --set-secrets="CALDAV_USERNAME=CALDAV_USERNAME:latest,CALDAV_PASSWORD=CALDAV_PASSWORD:latest,FEISHU_APP_ID=FEISHU_APP_ID:latest,FEISHU_APP_SECRET=FEISHU_APP_SECRET:latest"
 ```
  
 ## Web2RSS
