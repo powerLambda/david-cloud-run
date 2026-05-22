@@ -28,7 +28,7 @@ func newMockFeishu(t *testing.T) *httptest.Server {
 						RecordID: "recvkf0zJLIAg9",
 						Fields: map[string][]FieldValue{
 							"证券名称": {{Text: "A50ETF广发", Type: "text"}},
-							"证券代码": {{Text: "159136_SZ", Type: "text"}},
+							"证券代码": {{Text: "sz159136", Type: "text"}},
 						},
 					},
 					{
@@ -66,8 +66,8 @@ func TestFetchPortfolioCode_FieldExtraction(t *testing.T) {
 	if items[0]["证券名称"] != "A50ETF广发" {
 		t.Errorf("证券名称: got %q, want %q", items[0]["证券名称"], "A50ETF广发")
 	}
-	if items[0]["证券代码"] != "159136_SZ" {
-		t.Errorf("证券代码: got %q, want %q", items[0]["证券代码"], "159136_SZ")
+	if items[0]["证券代码"] != "sz159136" {
+		t.Errorf("证券代码: got %q, want %q", items[0]["证券代码"], "sz159136")
 	}
 	if items[1]["证券代码"] != "013308" {
 		t.Errorf("items[1] 证券代码: got %q, want %q", items[1]["证券代码"], "013308")
@@ -103,7 +103,7 @@ func TestFetchPortfolioCodeE2E(t *testing.T) {
 	if items[0]["证券名称"] != "A50ETF广发" {
 		t.Errorf("items[0] 证券名称: got %q, want %q", items[0]["证券名称"], "A50ETF广发")
 	}
-	if items[0]["证券代码"] != "159136_SZ" {
-		t.Errorf("items[0] 证券代码: got %q, want %q", items[0]["证券代码"], "159136_SZ")
+	if items[0]["证券代码"] != "sz159136" {
+		t.Errorf("items[0] 证券代码: got %q, want %q", items[0]["证券代码"], "sz159136")
 	}
 }

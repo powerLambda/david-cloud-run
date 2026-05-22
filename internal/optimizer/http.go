@@ -42,16 +42,23 @@ func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	items, err := FetchPortfolioCode(ctx, h.cfg)
 	if err != nil {
-		log.Printf("optimizer error: %v", err)
+		log.Printf("optimizer error fetching codes: %v", err)
 		http.Error(w, "failed to fetch portfolio", http.StatusBadGateway)
+		return
+	}
+
+	priced, err := QueryPortfolioPrice(ctx, items)
+	if err != nil {
+		log.Printf("optimizer error fetching prices: %v", err)
+		http.Error(w, "failed to fetch prices", http.StatusBadGateway)
 		return
 	}
 
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
-	_ = json.NewEncoder(w).Encode(items)
+	_ = json.NewEncoder(w).Encode(priced)
 
-	log.Printf("optimizer ok items=%d duration=%s", len(items), time.Since(start))
+	log.Printf("optimizer ok items=%d duration=%s", len(priced), time.Since(start))
 }
 
 func writeJSONError(w http.ResponseWriter, msg string, code int) {

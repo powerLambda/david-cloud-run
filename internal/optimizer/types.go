@@ -41,5 +41,12 @@ type record struct {
 }
 
 // PortfolioItem holds extracted text values keyed by field name,
-// e.g. {"证券名称": "A50ETF广发", "证券代码": "159136_SZ"}.
+// e.g. {"证券名称": "A50ETF广发", "证券代码": "sz159136"}.
 type PortfolioItem map[string]string
+
+// PortfolioItemWithPrice combines bitable data with the current market price.
+type PortfolioItemWithPrice struct {
+	Name  string  `json:"name"`
+	Code  string  `json:"code"`
+	Price float64 `json:"price"`
+}
