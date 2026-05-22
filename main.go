@@ -9,6 +9,7 @@ import (
 
 	"github.com/powerLambda/david-cloud-run/internal/caldav2ics"
 	"github.com/powerLambda/david-cloud-run/internal/config"
+	"github.com/powerLambda/david-cloud-run/internal/optimizer"
 	"github.com/powerLambda/david-cloud-run/internal/web2rss"
 )
 
@@ -39,6 +40,7 @@ func main() {
 	mux := http.NewServeMux()
 	mux.Handle("/caldav2ics/feishu", caldav2ics.NewHandler(cfg, client))
 	mux.Handle("/web2rss", web2rss.NewHandler(cfg, webSvc))
+	mux.Handle("/optimizer/refresh-portfolio-price", optimizer.NewHandler())
 	mux.HandleFunc("/healthz", handleHealth)
 
 	server := &http.Server{

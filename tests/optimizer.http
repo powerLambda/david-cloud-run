@@ -1,0 +1,6 @@
+### Refresh portfolio prices (uses FEISHU_APP_ID + FEISHU_APP_SECRET from server env)
+GET http://localhost:8080/optimizer/refresh-portfolio-price
+Accept: application/json
+
+### Method not allowed → 405
+POST http://localhost:8080/optimizer/refresh-portfolio-price
