@@ -7,6 +7,7 @@ import (
 	"time"
 	_ "time/tzdata"
 
+	"github.com/joho/godotenv"
 	"github.com/powerLambda/david-cloud-run/internal/caldav2ics"
 	"github.com/powerLambda/david-cloud-run/internal/config"
 	"github.com/powerLambda/david-cloud-run/internal/optimizer"
@@ -14,6 +15,13 @@ import (
 )
 
 func main() {
+	if _, err := os.Stat(".env"); err == nil {
+		if err := godotenv.Load(); err != nil {
+			log.Fatalf("error loading .env file: %v", err)
+		}
+		log.Println("loaded .env file")
+	}
+
 	cfg, err := config.LoadConfig()
 	if err != nil {
 		log.Fatalf("config error: %v", err)
