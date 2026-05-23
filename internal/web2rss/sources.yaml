@@ -25,3 +25,12 @@ sources:
     feed_title: "Anthropic Engineering Blog"
     feed_link: "https://www.anthropic.com/engineering"
     feed_description: "Engineering at Anthropic: Inside the team building reliable AI systems"
+  - url: "https://qoder.com/zh/blog"
+    pattern: |
+      {\"title\":\"{%}\",\"desc\":\"{%}\",\"img\{*}\"url\":\"{%}\",\"published_at
+    title_template: "{%1}"
+    link_template: "https://qoder.com/zh/blog/{%3}"
+    content_template: "{%2}"
+    feed_title: "Qoder Blog | 智能体编程平台"
+    feed_link: "https://qoder.com/zh/blog"
+    feed_description: "Qoder Blog: 智能体编程平台的最新动态"

@@ -11,4 +11,12 @@ Accept: application/rss+xml
 GET http://localhost:8080/web2rss?url=https://flink.apache.org/posts/
 Accept: application/rss+xml
 
+### Build RSS for another configured source URL
+GET http://localhost:8080/web2rss?url=https://www.anthropic.com/engineering
+Accept: application/rss+xml
+
+### Build RSS for the newly added source URL
+GET http://localhost:8080/web2rss?url=https://qoder.com/zh/blog
+Accept: application/rss+xml
+
 # Expected: 502 if the source is not configured in sources.yaml
