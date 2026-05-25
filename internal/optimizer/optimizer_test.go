@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"os"
+	"strings"
 	"testing"
 )
 
@@ -21,9 +22,8 @@ func newMockFeishu(t *testing.T) *httptest.Server {
 
 	// wildcard to match any baseID/tableID/recordID in the path
 	mux.HandleFunc("/open-apis/bitable/", func(w http.ResponseWriter, r *http.Request) {
-		if r.Method == http.MethodPut {
-			// update record — return success
-			_ = json.NewEncoder(w).Encode(updateResp{Code: 0, Msg: "success"})
+		if r.Method == http.MethodPost && strings.HasSuffix(r.URL.Path, "/batch_update") {
+			_ = json.NewEncoder(w).Encode(batchUpdateResp{Code: 0, Msg: "success"})
 			return
 		}
 		// POST — search records

@@ -40,14 +40,15 @@ func fetchToken(ctx context.Context, httpCli *http.Client, appID, appSecret stri
 	return tr.TenantAccessToken, nil
 }
 
-func updateRecord(ctx context.Context, httpCli *http.Client, token, baseID, tableID, recordID string, fields map[string]interface{}) error {
-	bodyBytes, err := json.Marshal(map[string]interface{}{"fields": fields})
+// batchUpdateRecords updates up to 500 records in a single API call.
+func batchUpdateRecords(ctx context.Context, httpCli *http.Client, token, baseID, tableID string, records []batchUpdateItem) error {
+	bodyBytes, err := json.Marshal(batchUpdateReqBody{Records: records})
 	if err != nil {
 		return err
 	}
-	url := fmt.Sprintf("%s/open-apis/bitable/v1/apps/%s/tables/%s/records/%s",
-		feishuBaseURL, baseID, tableID, recordID)
-	req, err := http.NewRequestWithContext(ctx, http.MethodPut, url, bytes.NewReader(bodyBytes))
+	url := fmt.Sprintf("%s/open-apis/bitable/v1/apps/%s/tables/%s/records/batch_update",
+		feishuBaseURL, baseID, tableID)
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, url, bytes.NewReader(bodyBytes))
 	if err != nil {
 		return err
 	}
@@ -56,16 +57,16 @@ func updateRecord(ctx context.Context, httpCli *http.Client, token, baseID, tabl
 
 	resp, err := httpCli.Do(req)
 	if err != nil {
-		return fmt.Errorf("updateRecord: %w", err)
+		return fmt.Errorf("batchUpdateRecords: %w", err)
 	}
 	defer resp.Body.Close()
 
-	var ur updateResp
-	if err := json.NewDecoder(resp.Body).Decode(&ur); err != nil {
+	var br batchUpdateResp
+	if err := json.NewDecoder(resp.Body).Decode(&br); err != nil {
 		return err
 	}
-	if ur.Code != 0 {
-		return fmt.Errorf("feishu update error: code=%d msg=%s", ur.Code, ur.Msg)
+	if br.Code != 0 {
+		return fmt.Errorf("feishu batch update error: code=%d msg=%s", br.Code, br.Msg)
 	}
 	return nil
 }

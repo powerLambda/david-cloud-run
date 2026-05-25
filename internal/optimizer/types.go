@@ -54,7 +54,16 @@ type PortfolioItemWithPrice struct {
 	Price    float64 `json:"price"`
 }
 
-type updateResp struct {
+type batchUpdateItem struct {
+	RecordID string                 `json:"record_id"`
+	Fields   map[string]interface{} `json:"fields"`
+}
+
+type batchUpdateReqBody struct {
+	Records []batchUpdateItem `json:"records"`
+}
+
+type batchUpdateResp struct {
 	Code int    `json:"code"`
 	Msg  string `json:"msg"`
 }

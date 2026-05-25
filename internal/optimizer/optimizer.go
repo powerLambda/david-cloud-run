@@ -71,13 +71,14 @@ func UpdatePortfolioPrice(ctx context.Context, cfg Config, items []PortfolioItem
 	if err != nil {
 		return err
 	}
-	for _, item := range items {
-		fields := map[string]interface{}{fieldCurrentPrice: item.Price}
-		if err := updateRecord(ctx, httpCli, token, bitableBaseID, bitableTableID, item.RecordID, fields); err != nil {
-			log.Printf("optimizer: update error for record %q (%s): %v", item.RecordID, item.Code, err)
+	records := make([]batchUpdateItem, len(items))
+	for i, item := range items {
+		records[i] = batchUpdateItem{
+			RecordID: item.RecordID,
+			Fields:   map[string]interface{}{fieldCurrentPrice: item.Price},
 		}
 	}
-	return nil
+	return batchUpdateRecords(ctx, httpCli, token, bitableBaseID, bitableTableID, records)
 }
 
 // QueryPortfolioPrice enriches a slice of PortfolioItems with current market prices.
