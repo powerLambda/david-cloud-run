@@ -32,3 +32,31 @@ type feishuImageResp struct {
 type feishuImageData struct {
 	ImageKey string `json:"image_key"`
 }
+
+type botPostMsg struct {
+	MsgType string         `json:"msg_type"`
+	Content botPostContent `json:"content"`
+}
+
+type botPostContent struct {
+	Post botPostLangs `json:"post"`
+}
+
+type botPostLangs struct {
+	ZhCn botPostBody `json:"zh_cn"`
+}
+
+type botPostBody struct {
+	Title   string            `json:"title"`
+	Content [][]botPostImgElem `json:"content"`
+}
+
+type botPostImgElem struct {
+	Tag      string `json:"tag"`
+	ImageKey string `json:"image_key"`
+}
+
+type botPostResp struct {
+	StatusCode    int    `json:"StatusCode"`
+	StatusMessage string `json:"StatusMessage"`
+}

@@ -18,17 +18,19 @@ const (
 var portfolioFieldNames = []string{"证券名称", "证券代码"}
 
 type Config struct {
-	AppID            string
-	AppSecret        string
-	BrowserlessURL   string
-	BrowserlessToken string
+	AppID              string
+	AppSecret          string
+	BrowserlessURL     string
+	BrowserlessToken   string
+	SnapshotWebhookURL string
 }
 
 func LoadConfig() Config {
 	return Config{
-		AppID:            strings.TrimSpace(os.Getenv("FEISHU_APP_ID")),
-		AppSecret:        strings.TrimSpace(os.Getenv("FEISHU_APP_SECRET")),
-		BrowserlessURL:   strings.TrimSpace(os.Getenv("BROWSERLESS_URL")),
-		BrowserlessToken: strings.TrimSpace(os.Getenv("BROWSERLESS_TOKEN")),
+		AppID:              strings.TrimSpace(os.Getenv("FEISHU_APP_ID")),
+		AppSecret:          strings.TrimSpace(os.Getenv("FEISHU_APP_SECRET")),
+		BrowserlessURL:     strings.TrimSpace(os.Getenv("BROWSERLESS_URL")),
+		BrowserlessToken:   strings.TrimSpace(os.Getenv("BROWSERLESS_TOKEN")),
+		SnapshotWebhookURL: strings.TrimSpace(os.Getenv("FEISHU_GROUP_WEBHOOK_URL")),
 	}
 }

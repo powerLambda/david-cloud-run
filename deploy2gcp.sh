@@ -17,7 +17,7 @@ echo "--------------------------------------------------------"
 gcloud run deploy "$SERVICE_NAME" \
   --source . \
   --region "$REGION" \
-  --set-secrets="CALDAV_USERNAME=CALDAV_USERNAME:latest,CALDAV_PASSWORD=CALDAV_PASSWORD:latest,FEISHU_APP_ID=FEISHU_APP_ID:latest,FEISHU_APP_SECRET=FEISHU_APP_SECRET:latest" \
+  --set-secrets="CALDAV_USERNAME=CALDAV_USERNAME:latest,CALDAV_PASSWORD=CALDAV_PASSWORD:latest,FEISHU_APP_ID=FEISHU_APP_ID:latest,FEISHU_APP_SECRET=FEISHU_APP_SECRET:latest,BROWSERLESS_URL=BROWSERLESS_URL:latest,BROWSERLESS_TOKEN=BROWSERLESS_TOKEN:latest,FEISHU_GROUP_WEBHOOK_URL=FEISHU_GROUP_WEBHOOK_URL:latest" \
   --allow-unauthenticated \
   --quiet
 

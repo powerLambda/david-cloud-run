@@ -8,12 +8,15 @@ import (
 	"io"
 	"log"
 	"mime/multipart"
-	"os"
 	"net/http"
 	"net/url"
+	"os"
+	"time"
 )
 
 const snapshotTargetURL = "https://dapanyuntu.com/"
+
+var shanghaiLoc = time.FixedZone("Asia/Shanghai", 8*60*60)
 
 // takeScreenshot calls the browserless REST screenshot API and returns JPEG bytes.
 func takeScreenshot(ctx context.Context, httpCli *http.Client, browserlessURL, token string) ([]byte, error) {
@@ -27,7 +30,7 @@ func takeScreenshot(ctx context.Context, httpCli *http.Client, browserlessURL, t
 		},
 		Options: screenshotOptions{
 			Type:    "jpeg",
-			Quality: 90,
+			Quality: 100,
 		},
 		GotoOptions: screenshotGoto{
 			WaitUntil: "networkidle2",
@@ -100,6 +103,44 @@ func uploadFeishuImage(ctx context.Context, httpCli *http.Client, feishuToken st
 	return ir.Data.ImageKey, nil
 }
 
+func sendMarketSnapshotToGroup(ctx context.Context, httpCli *http.Client, webhookURL, imageKey string, t time.Time) error {
+	msg := botPostMsg{
+		MsgType: "post",
+		Content: botPostContent{
+			Post: botPostLangs{
+				ZhCn: botPostBody{
+					Title:   t.In(shanghaiLoc).Format("2006-01-02 15:04") + " A股大盘云图",
+					Content: [][]botPostImgElem{{{Tag: "img", ImageKey: imageKey}}},
+				},
+			},
+		},
+	}
+	body, err := json.Marshal(msg)
+	if err != nil {
+		return err
+	}
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, webhookURL, bytes.NewReader(body))
+	if err != nil {
+		return err
+	}
+	req.Header.Set("Content-Type", "application/json; charset=utf-8")
+
+	resp, err := httpCli.Do(req)
+	if err != nil {
+		return fmt.Errorf("feishu webhook: %w", err)
+	}
+	defer resp.Body.Close()
+
+	var wr botPostResp
+	if err := json.NewDecoder(resp.Body).Decode(&wr); err != nil {
+		return err
+	}
+	if wr.StatusCode != 0 {
+		return fmt.Errorf("feishu webhook error: code=%d msg=%s", wr.StatusCode, wr.StatusMessage)
+	}
+	return nil
+}
+
 // TakeMarketSnapshot takes a screenshot of the market page and uploads it to Feishu,
 // returning the image_key.
 func TakeMarketSnapshot(ctx context.Context, cfg Config) (string, error) {
@@ -124,5 +165,14 @@ func TakeMarketSnapshot(ctx context.Context, cfg Config) (string, error) {
 		return "", err
 	}
 	log.Printf("market snapshot: uploaded image_key=%s", imageKey)
+
+	if cfg.SnapshotWebhookURL != "" {
+		if err := sendMarketSnapshotToGroup(ctx, httpCli, cfg.SnapshotWebhookURL, imageKey, time.Now()); err != nil {
+			log.Printf("market snapshot: send to group failed: %v", err)
+		} else {
+			log.Printf("market snapshot: sent to group via webhook")
+		}
+	}
+
 	return imageKey, nil
 }
