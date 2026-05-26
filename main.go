@@ -49,6 +49,7 @@ func main() {
 	mux.Handle("/caldav2ics/feishu", caldav2ics.NewHandler(cfg, client))
 	mux.Handle("/web2rss", web2rss.NewHandler(cfg, webSvc))
 	mux.Handle("/optimizer/refresh-portfolio-price", optimizer.NewHandler())
+	mux.Handle("/optimizer/market-snapshot", optimizer.NewSnapshotHandler())
 	mux.HandleFunc("/healthz", handleHealth)
 
 	server := &http.Server{
