@@ -110,7 +110,7 @@ func sendMarketSnapshotToGroup(ctx context.Context, httpCli *http.Client, webhoo
 			Post: botPostLangs{
 				ZhCn: botPostBody{
 					Title:   t.In(shanghaiLoc).Format("2006-01-02 15:04") + " A股大盘云图",
-					Content: [][]botPostImgElem{{{Tag: "img", ImageKey: imageKey}}},
+					Content: [][]botPostElem{{{Tag: "img", ImageKey: imageKey}}},
 				},
 			},
 		},

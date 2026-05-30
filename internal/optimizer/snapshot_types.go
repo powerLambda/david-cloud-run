@@ -47,13 +47,14 @@ type botPostLangs struct {
 }
 
 type botPostBody struct {
-	Title   string            `json:"title"`
-	Content [][]botPostImgElem `json:"content"`
+	Title   string         `json:"title"`
+	Content [][]botPostElem `json:"content"`
 }
 
-type botPostImgElem struct {
+type botPostElem struct {
 	Tag      string `json:"tag"`
-	ImageKey string `json:"image_key"`
+	Text     string `json:"text,omitempty"`
+	ImageKey string `json:"image_key,omitempty"`
 }
 
 type botPostResp struct {

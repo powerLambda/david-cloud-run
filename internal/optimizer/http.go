@@ -59,6 +59,13 @@ func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		// non-fatal: return priced data so the caller can verify what was fetched
 	}
 
+	if h.cfg.SnapshotWebhookURL != "" {
+		httpCli := &http.Client{}
+		if err := sendPriceUpdateToGroup(ctx, httpCli, h.cfg.SnapshotWebhookURL, priced, time.Now()); err != nil {
+			log.Printf("optimizer: send price update to group failed: %v", err)
+		}
+	}
+
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
 	_ = json.NewEncoder(w).Encode(priced)

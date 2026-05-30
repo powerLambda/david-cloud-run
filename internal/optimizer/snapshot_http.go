@@ -40,7 +40,7 @@ func (h *SnapshotHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	start := time.Now()
-	ctx, cancel := context.WithTimeout(r.Context(), snapshotTimeout)
+	ctx, cancel := context.WithTimeout(context.Background(), snapshotTimeout)
 	defer cancel()
 
 	imageKey, err := TakeMarketSnapshot(ctx, h.cfg)

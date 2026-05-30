@@ -1,11 +1,14 @@
 package optimizer
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"strconv"
+	"time"
 )
 
 // fieldText extracts a string value from a Feishu Bitable field's raw JSON.
@@ -79,6 +82,53 @@ func UpdatePortfolioPrice(ctx context.Context, cfg Config, items []PortfolioItem
 		}
 	}
 	return batchUpdateRecords(ctx, httpCli, token, bitableBaseID, bitableTableID, records)
+}
+
+func sendPriceUpdateToGroup(ctx context.Context, httpCli *http.Client, webhookURL string, priced []PortfolioItemWithPrice, t time.Time) error {
+	rows := make([][]botPostElem, 0, len(priced)+1)
+	for _, item := range priced {
+		rows = append(rows, []botPostElem{{
+			Tag:  "text",
+			Text: fmt.Sprintf("%-12s  %s  ¥%.4f", item.Name, item.Code, item.Price),
+		}})
+	}
+	rows = append(rows, []botPostElem{{Tag: "text", Text: fmt.Sprintf("共更新 %d 只持仓", len(priced))}})
+
+	msg := botPostMsg{
+		MsgType: "post",
+		Content: botPostContent{
+			Post: botPostLangs{
+				ZhCn: botPostBody{
+					Title:   fmt.Sprintf("%s 持仓价格更新 (%d只)", t.In(shanghaiLoc).Format("2006-01-02 15:04"), len(priced)),
+					Content: rows,
+				},
+			},
+		},
+	}
+	body, err := json.Marshal(msg)
+	if err != nil {
+		return err
+	}
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, webhookURL, bytes.NewReader(body))
+	if err != nil {
+		return err
+	}
+	req.Header.Set("Content-Type", "application/json; charset=utf-8")
+
+	resp, err := httpCli.Do(req)
+	if err != nil {
+		return fmt.Errorf("feishu webhook: %w", err)
+	}
+	defer resp.Body.Close()
+
+	var wr botPostResp
+	if err := json.NewDecoder(resp.Body).Decode(&wr); err != nil {
+		return err
+	}
+	if wr.StatusCode != 0 {
+		return fmt.Errorf("feishu webhook error: code=%d msg=%s", wr.StatusCode, wr.StatusMessage)
+	}
+	return nil
 }
 
 // QueryPortfolioPrice enriches a slice of PortfolioItems with current market prices.
